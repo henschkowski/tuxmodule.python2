@@ -1,0 +1,27 @@
+First, build the module:
+
+- edit paths (TUXDIR) in "setenv" to match your environment 
+- source setenv (". ./setenv")
+- edit "Setup.in" and choose a line for Tuxedo 6.5 or Tuxedo 7.1 or later
+- adjust the path to the python binary in the first line of  pyserver.py, testclient.py, recv.py, send.py, simpcl.py
+- run "make -f Makefile.pre.in boot"
+- run "make"
+
+To run the demo:
+
+- copy ubbsimple to ubbconfig 
+- source setenv (". ./setenv")
+- run "make demo" (this creates queues, TLOG and compiles ubbconfig)
+- run "tmboot"
+- run "simpcl.py" (equivalent of $TUXDIR/apps/simpapp)
+
+
+To run the test:
+
+- copy ubbtest to ubbconfig (this is the default)
+- source setenv (". ./setenv")
+- run "make demo"
+- run "tmboot"
+- run "testclient.py". This will test some ATMI primitives
+- run "send.py" to test a conversation
+
