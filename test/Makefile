@@ -26,7 +26,6 @@ TUXCONFIG: ubbconfig
 
 
 clean:	
-		-rm -f *.o *~ ULOG* core
 		-rm -f *.a tags TAGS config.c Makefile.pre $(TARGET) sedscript
 		-rm -f *.so *.sl so_locations
 		-rm -f  *.pyc ULOG* stderr stdout tuxmodule.so QFS TUXFS TUXCONFIG tm*evt* 
@@ -34,3 +33,4 @@ clean:
 		-ipcrm `ipcs -q | grep ${USER}|awk  '{ print "-q " $$2 }'`        
 		-ipcrm `ipcs -s | grep ${USER}|awk  '{ print "-s " $$2 }'`        
 		-ipcrm `ipcs -m | grep ${USER}|awk  '{ print "-m " $$2 }'`        
+		-rm -f *.o *~ ULOG* core
