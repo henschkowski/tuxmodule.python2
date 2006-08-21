@@ -1,27 +1,26 @@
 First, build the module:
 
-- edit paths (TUXDIR) in "setenv" to match your environment 
-- source setenv (". ./setenv")
-- edit "Setup.in" and choose a line for Tuxedo 6.5 or Tuxedo 7.1 or later
-- adjust the path to the python binary in the first line of  pyserver.py, testclient.py, recv.py, send.py, simpcl.py
-- run "make -f Makefile.pre.in boot"
-- run "make"
+- set TUXDIR (for example, "export TUXDIR=/opt/tuxedo/6.5")
+- make sure that you use the desired version of python on the command 
+  line ("export PATH=/usr/local/bin:$PATH")
+- run "python setup.py build --force"
+- run "python setup.py install" to install in PYTHON_LIB/site-packages/tuxedo
+- a package tuxedo will be built, with the shared objects atmi.so 
+  and atmiws.so in it. 
+- for documentation, see the examples in the testclient.py and pyserver.py 
+  files in the "test" directory
 
-To run the demo:
+To run the example / test:
 
-- copy ubbsimple to ubbconfig 
-- source setenv (". ./setenv")
-- run "make demo" (this creates queues, TLOG and compiles ubbconfig)
-- run "tmboot"
-- run "simpcl.py" (equivalent of $TUXDIR/apps/simpapp)
-
-
-To run the test:
-
-- copy ubbtest to ubbconfig (this is the default)
-- source setenv (". ./setenv")
-- run "make demo"
-- run "tmboot"
-- run "testclient.py". This will test some ATMI primitives
+- cd test
+- the IPC key is set to 77662 and the WSH port is 7766. Adjust in "ubbconfig"
+  and ""setenv" if you need other values.
+- source setenv (". ./setenv") - make sure you still have TUXDIR set
+- run "make" to build TUXCONFIG, QFS and the executables for server and clients
+- run "tmboot -y"
+- run "testclient.py". This will test the ATMI interface
 - run "send.py" to test a conversation
+- run "simpcl.py", equivalent of $TUXDIR/apps/simpapp 
+- run "make clean" when you are done. This also cleans up IPC resources
+
 

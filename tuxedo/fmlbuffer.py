@@ -5,7 +5,7 @@ import types
 
 
 
-class easyList(UserList):
+class EasyList(UserList):
     def __setitem__(self, i, item):
         listlen  = self.__len__()
         if listlen <= i:
@@ -17,16 +17,16 @@ class easyList(UserList):
 
 
 
-class fmlBuffer(UserDict):
+class FmlBuffer(UserDict):
 	def __setitem__(self, key, item):
             if not self.has_key(key):
-                self.data[key] = easyList()
+                self.data[key] = EasyList()
             self.data[key].append(item)
 			
 
         def __getitem__(self, key):
             if not self.has_key(key):
-                self.data[key] = easyList()
+                self.data[key] = EasyList()
             return self.data[key]
 
         def as_dictionary(self):
@@ -40,7 +40,7 @@ class fmlBuffer(UserDict):
 
 
 def test():
-    buf = fmlBuffer()
+    buf = FmlBuffer()
     buf['huhu'][0] = "gaga"
     buf['huhu'][1] = "gugu"
     buf['huhu'][5] = "gigi"

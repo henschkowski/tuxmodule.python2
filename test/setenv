@@ -1,9 +1,15 @@
-TUXDIR="/home/hensch/bea/tuxedo8.1" 
+# TUXDIR should already be set during build
+
+#TUXDIR="/experimental/tuxedo/6.5.447"
+
 APPDIR=`pwd`
 TUXCONFIG=$APPDIR/TUXCONFIG
 QMCONFIG=$APPDIR/QFS
+WSNADDR=//localhost:7766
+PATH=$TUXDIR/bion:$PATH
+LD_LIBRARY_PATH=$TUXDIR/lib:$LD_LIBRARY_PATH
 
-export TUXDIR APPDIR TUXCONFIG QMCONFIG
+export TUXDIR APPDIR TUXCONFIG QMCONFIG WSNADDR
 FIELDTBLS32=tpadm,Usysfl32,dmadmin,evt_mib,mydef
 FLDTBLDIR32=$TUXDIR/udataobj:.
 export FIELDTBLS32 FLDTBLDIR32

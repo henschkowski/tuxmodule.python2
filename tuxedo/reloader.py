@@ -1,8 +1,10 @@
 import os
 import re
-import tux
+import tuxedo
 
-class reloader:
+
+
+class Reloader:
 
     """ dynamically reload a server class if the .py file is newer than .pyc file """ 
 
@@ -18,7 +20,7 @@ class reloader:
                 del self.server
                 self.server = self.module.server()
         except:
-                tux.userlog("can't reload " + `self.module`)
+                tuxedo.atmi.userlog("can't reload " + `self.module`)
         s=self.server
         return s
 
@@ -34,7 +36,7 @@ class reloader:
         try:
             mtime_pyc = os.stat(filename_pyc)[9]
         except:
-            tux.userlog("load_if_modified: exception @ stat (1)")
+            tuxedo.atmi.userlog("load_if_modified: exception @ stat (1)")
             pass
 
         mtime_py = 0
@@ -43,7 +45,7 @@ class reloader:
             filename_py = filename_base + ".py"
             mtime_py = os.stat(filename_py)[9]
         except:
-            tux.userlog("load_if_modified: exception @ stat (2)")
+            tuxedo.atmi.userlog("load_if_modified: exception @ stat (2)")
             pass
         
         if mtime_py:

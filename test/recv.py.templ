@@ -1,9 +1,8 @@
-#!/home/hensch/bin/python 
+#!%%PYTHON_EXECUTABLE%%
 import sys
 import os
 import string
-import tux
-
+from tuxedo.atmi import *
 
 class server:
 	def RECV(self, arg):
@@ -28,33 +27,33 @@ class server:
 
 		try:
 			while 1:
-				evt, rec = tux.tprecv(handle)
+				evt, rec = tprecv(handle)
 				print evt, rec
 				if rec == "END":
-					tux.userlog("server returning TPSUCCESS")
-					return tux.TPSUCCESS
+					userlog("server returning TPSUCCESS")
+					return TPSUCCESS
 				else:
 					ret = "len = %d" % len(rec)
-#					tux.userlog("call TOUPPER ...")
-#					tux.tpcall("TOUPPER", "")		
-					tux.userlog("sending %s ..." % (ret))
-					ret = tux.tpsend(handle, ret, tux.TPRECVONLY)
+#					userlog("call TOUPPER ...")
+#					tpcall("TOUPPER", "")		
+					userlog("sending %s ..." % (ret))
+					ret = tpsend(handle, ret, TPRECVONLY)
 		except RuntimeError, e:
 			exception = "got exception: %s" % e
-			tux.userlog(exception)
-			return tux.TPFAIL
+			userlog(exception)
+			return TPFAIL
 	
 		except:
-			tux.userlog( "got exception")
-			return tux.TPFAIL
+			userlog( "got exception")
+			return TPFAIL
 	
 	def init(self, arguments):
 
-		tux.tpopen()
-		tux.tpadvertise("RECV");
+		tpopen()
+		tpadvertise("RECV");
 		
 	def cleanup(self):
-		tux.userlog("cleanup in recv_py called!")
+		userlog("cleanup in recv_py called!")
 
 
 srv = server()
@@ -64,7 +63,7 @@ def exithandler():
 sys.exitfunc = exithandler
 
 if __name__ == '__main__': 
-	tux.mainloop(sys.argv, srv, None)
+	mainloop(sys.argv, srv, None)
 
 # Local Variables: 
 # mode:python 

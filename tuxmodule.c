@@ -41,6 +41,7 @@
 #define MAX_SVC_NAME_LEN      15 + 1 
 #define MAX_METHOD_NAME_LEN      1024 
 
+
 typedef struct {
     char name[MAX_SVC_NAME_LEN];  /* constant from atmi.h */
     char method[MAX_METHOD_NAME_LEN];            
@@ -54,7 +55,10 @@ typedef struct {
 
 /* Forward declarions of local functions */
 
+#ifndef TUXWS
 void tuxedo_dispatch(TPSVCINFO * rqst);
+#endif /* not TUXWS */
+
 extern void _set_XA_switch(struct xa_switch_t* new_xa_switch) ;
 
 static PyObject * makeargvobject(int argc, char** argv);
@@ -95,10 +99,10 @@ static PyObject * tux_tpdiscon(PyObject * self, PyObject * args);
 static PyObject * tux_userlog(PyObject * self, PyObject * args);
 static void ins(PyObject *d, char *s, long x);
 static PyObject * tux_tpinit(PyObject * self, PyObject * args);
-#ifdef TUX80
+#if TUXVERSION >= 7
 static PyObject * tux_tpgetctxt(PyObject * self, PyObject * args);
 static PyObject * tux_tpsetctxt(PyObject * self, PyObject * args);
-#endif /* TUX80 */
+#endif /* TUXVERSION */
 static PyObject * tux_tpchkauth(PyObject * self, PyObject * args);
 static PyObject * tux_tpterm(PyObject * self, PyObject * args);
 static PyObject* tux_get_tpurcode(PyObject* self, PyObject * args);
@@ -111,10 +115,10 @@ static PyObject * tux_tpdequeue(PyObject * self, PyObject * args);
 
 static PyMethodDef tux_methods[] = {
     {"tpinit",	         tux_tpinit,	    METH_VARARGS, "args: {usrname: '', clt=''}"},
-#ifdef TUX80
+#if TUXVERSION >= 7
     {"tpgetctxt",	 tux_tpgetctxt,	    METH_VARARGS, "args: {} -> context"},
     {"tpsetctxt",	 tux_tpsetctxt,	    METH_VARARGS, "args: {context}"},
-#endif /* TUX80 */
+#endif /* TUXVERSION */
     {"tpterm",	         tux_tpterm,	    METH_VARARGS},
     {"tpchkauth",	 tux_tpchkauth,	    METH_VARARGS},
     {"tpcall",	         tux_tpcall,	    METH_VARARGS, "args: ('service', {args}|'args')"},
@@ -1363,7 +1367,7 @@ tux_tpinit(PyObject * self, PyObject * args)
 
 /* }}} */
 /* {{{ tux_tpgetctxt() */
-#ifdef TUX80
+#if TUXVERSION >= 7
 static PyObject * 
 tux_tpgetctxt(PyObject * self, PyObject * args)
 {
@@ -1398,10 +1402,10 @@ tux_tpgetctxt(PyObject * self, PyObject * args)
  leave_func:
     return result;
 }
-#endif /* TUX80 */
+#endif /* TUXVERSION */
 /* }}} */
 /* {{{ tux_tpsetctxt() */
-#ifdef TUX80
+#if TUXVERSION >= 7
 static PyObject * 
 tux_tpsetctxt(PyObject * self, PyObject * args)
 {
@@ -1442,7 +1446,7 @@ tux_tpsetctxt(PyObject * self, PyObject * args)
  leave_func:
     return result;
 }
-#endif /* TUX80 */
+#endif /* TUXVERSION */
 /* }}} */
 /* {{{ tux_tpchkauth() */
 
@@ -1823,10 +1827,16 @@ tux_tpdequeue(PyObject * self, PyObject * args)
 	}
     } 
 
-    if ((tuxbuf = tpalloc("FML32", 0, TUXBUFSIZE) ) < 0) {
+    if ((tuxbuf = tpalloc("FML32", NULL, TUXBUFSIZE) ) == NULL) {
+#ifdef DEBUG
+	    printf("%d : tpalloc failed\n", __LINE__);
+#endif
 	goto leave_func;
     }
 
+#ifdef DEBUG
+	    printf("%d : before tpdequeue\n", __LINE__);
+#endif
     if (tpdequeue(queue_space, queue_name, &qctl, &tuxbuf, &outlen, flags) < 0) {
 	char tmp[200] = "";
 
@@ -1846,8 +1856,15 @@ tux_tpdequeue(PyObject * self, PyObject * args)
 	}
 	    
     }
+#ifdef DEBUG
+	    printf("%d : after tpdequeue\n", __LINE__);
+#endif
 
     if ((result = transform_tux_to_py(tuxbuf)) == NULL) {
+#ifdef DEBUG
+	    printf("%d : transform_tux_to_py failed\n ", __LINE__);
+#endif
+      
 	goto leave_func;
     }
     
@@ -1856,30 +1873,45 @@ tux_tpdequeue(PyObject * self, PyObject * args)
     
     if (qctl.flags & TPQPRIORITY) {
         if ((item = Py_BuildValue("l", qctl.priority)) == NULL) {
+#ifdef DEBUG
+	    printf("%d : qctl.priority failed\n", __LINE__);
+#endif
 	    goto leave_func;
 	}
 	PyDict_SetItemString(qctl_obj, "priority", item);
     }
     if (qctl.flags & TPQMSGID) {
         if ((item = Py_BuildValue("s", qctl.msgid)) == NULL) {
+#ifdef DEBUG
+	    printf("%d : qctl.msgid failed\n", __LINE__);
+#endif
 	    goto leave_func;
 	}
 	PyDict_SetItemString(qctl_obj, "msgid", item);
     }
     if (qctl.flags & TPQCORRID) {
         if ((item = Py_BuildValue("s", qctl.corrid)) == NULL) {
+#ifdef DEBUG
+	    printf("%d : qctl.corrid failed\n", __LINE__);
+#endif
 	    goto leave_func;
 	}
 	PyDict_SetItemString(qctl_obj, "corrid", item);
     }
     if (qctl.flags & TPQREPLYQ) {
         if ((item = Py_BuildValue("s", qctl.replyqueue)) == NULL) {
+#ifdef DEBUG
+	    printf("%d : qctl.replyqueue failed\n", __LINE__);
+#endif
 	    goto leave_func;
 	}
 	PyDict_SetItemString(qctl_obj, "replyqueue", item);
     }
     if (qctl.flags & TPQFAILUREQ) {
         if ((item = Py_BuildValue("s", qctl.failurequeue)) == NULL) {
+#ifdef DEBUG
+	    printf("%d :  qctl.failurequeue failed\n", __LINE__);
+#endif
 	    goto leave_func;
 	}
 	PyDict_SetItemString(qctl_obj, "failurequeue", item);
@@ -2395,13 +2427,12 @@ tux_mainloop(PyObject * self, PyObject * args)
 /*                                          */
 /* **************************************** */
 
-/* {{{ inittux() */
+/* {{{ initatmi() */
+PyMODINIT_FUNC 
 #ifndef TUXWS
-DL_EXPORT(void)
-    inittux()
+    initatmi(void)
 #else
-DL_EXPORT(void)
-    inittuxws()
+    initatmiws(void)
 #endif /* TUXWS */
 {
     PyObject *m = NULL;
@@ -2415,9 +2446,9 @@ DL_EXPORT(void)
 
     /* Create the module and add the functions */
 #ifndef TUXWS    
-    m = Py_InitModule("tux", tux_methods);
+    m = Py_InitModule("atmi", tux_methods);
 #else
-    m = Py_InitModule("tuxws", tux_methods);
+    m = Py_InitModule("atmiws", tux_methods);
 #endif /* TUXWS */
 
     /* Add some symbolic constants to the module */
@@ -2547,15 +2578,21 @@ DL_EXPORT(void)
     ins(d, "TPEDIAGNOSTIC", TPEDIAGNOSTIC);
     ins(d, "TPEMIB", TPEMIB);
     ins(d, "TPMAXVAL", TPMAXVAL);
-#ifdef TUX80
+#if TUXVERSION >= 7
     ins(d, "TPNULLCONTEXT", TPNULLCONTEXT);
-#endif /* TUX80 */
+#endif /* TUXVERSION */
     ins(d, "tperrno", tperrno);
+
+
+    /* Tuxedo Version as defined by user at compile time */
+    
+    ins(d, "TUXVERSION", TUXVERSION);
+
 
 
     /* Check for errors */
     if (PyErr_Occurred())
-	Py_FatalError("can't initialize module tux");
+	Py_FatalError("can't initialize module atmi");
 }
 
 /* }}} */
