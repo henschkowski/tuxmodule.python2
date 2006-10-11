@@ -23,4 +23,3 @@ To run the example / test:
 - run "simpcl.py", equivalent of $TUXDIR/apps/simpapp 
 - run "make clean" when you are done. This also cleans up IPC resources
 
-
