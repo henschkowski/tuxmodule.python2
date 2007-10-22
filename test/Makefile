@@ -3,11 +3,11 @@ all:	demo
 demo:	TUXCONFIG tlog QFS server_exe
 
 tlog:
-	python rplc.py <  create_tlog | ksh
+	python rplc.py <  create_tlog | bash
 
 QFS:
-	@if test -f QFS; then (python rplc.py < delete_queues | ksh); fi
-	(python rplc.py < create_queues | ksh ); true
+	@if test -f QFS; then (python rplc.py < delete_queues | bash); fi
+	(python rplc.py < create_queues | bash ); true
 
 server_exe:
 	python rplc.py < pyserver.py.templ > pyserver.py
