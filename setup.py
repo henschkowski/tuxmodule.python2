@@ -4,7 +4,7 @@
 Distutils installer for Tuxmodule / modified setup from m2crypto module
 
 Copyright (c) 1999-2003, Ng Pheng Siong. All rights reserved.
-Copyright (c) 2003-2005, Ralf Henschkowski. All rights reserved.
+Copyright (c) 2003-2007, Ralf Henschkowski. All rights reserved.
 
 """
 
@@ -91,26 +91,16 @@ tuxedo_ext_ws = Extension(name = 'tuxedo.atmiws',
                      extra_link_args = extra_link_args
                      )
 
-
-setup(name = 'tuxedo',
-    version = '1.0',
-    description = 'Tuxmodule: A Python client and server library for use with BEA Tuxedo',
-    author = 'Ralf Henschkowski',
-    author_email = 'rhenschkowski@web.de',
-    url = 'http://ralf.freezope.org',
-    packages = ["tuxedo"],
-    ext_modules = [tuxedo_ext]
-    )
-
-setup(name = 'tuxedo_ws',
-    version = '1.0',
-    description = 'Tuxmodule: A Python client and server library for use with BEA Tuxedo, /WS version',
-    author = 'Ralf Henschkowski',
-    author_email = 'rhenschkowski@web.de',
-    url = 'http://ralf.freezope.org',
-    packages = ["tuxedo"],
-    ext_modules = [tuxedo_ext_ws]
-    )
+for ver in [('tuxedo', tuxedo_ext),('tuxedo_ws', tuxedo_ext_ws)]:
+    setup(name = ver[0],
+          version = '1.0',
+          description = 'Tuxmodule: A Python client and server library for use with BEA Tuxedo',
+          author = 'Ralf Henschkowski',
+          author_email = 'ralf.henschkowski@gmail.com',
+          url = 'http://code.google.com/p/tuxmodule',
+          packages = ["tuxedo"],
+          ext_modules = [ver[1]]
+          )
 
 
 
