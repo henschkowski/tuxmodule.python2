@@ -2,7 +2,7 @@
    This file decalres some functions to convert TUXEDO data types (STRING,
    FML32) to Python data types (string, dictionary) and vice versa 
 
-   (c) 1999 Ralf Henschkowski (ralfh@gmx.ch)
+   (c) 1999 Ralf Henschkowski (ralf@henschkowski.com)
 
 
 */
