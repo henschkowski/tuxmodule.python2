@@ -14,6 +14,7 @@ import os, shutil
 import sys
 from distutils.core import setup, Extension
 from distutils.command import build_ext, clean
+import commands, os.path
 
 
 my_inc = os.path.join(os.getcwd(), '.')
@@ -30,9 +31,14 @@ tuxversion = 0
 
 # auto-detect Tuxedo version (to link the correct "new" or "old" (pre-7.1) style libs)
 tux8 = os.access(os.path.join(tuxedo_dir, "udataobj", "System.rdp"), os.F_OK)
-if tuxversion == 0 and tux8 == True:
-    print "*** Building for Tuxedo Version > 6  ... ***"
+status, _ = commands.getstatusoutput("nm %s | grep tpappthr" % (os.path.join(tuxedo_dir, "lib", "libtux.a")))
+tux10 = not status
+if tuxversion == 0 and tux10 == True:
+    print "*** Building for Tuxedo Version > 10  ... ***"
     tuxversion = 8
+elif tuxversion == 0 and tux8 == True:
+    print "*** Building for Tuxedo Version > 8  ... ***"
+    tuxversion = 10
 else:
     print "*** Building for Tuxedo 6.x ... ***"
     tuxversion = 6
