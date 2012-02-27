@@ -307,7 +307,7 @@ FBFR32* dict_to_fml(PyObject* dict) {
 		    }
 
 		    fprintf(stderr, 
-			    "could not convert value for key %s to FML type FLD_LONG\n",
+			    "could not convert value for key %s to FML type FLD_STRING\n",
 			    key_cstring);
 		    goto leave_func;
 		    
