@@ -97,10 +97,11 @@ tuxedo_ext_ws = Extension(name = 'tuxedo.atmiws',
                      extra_link_args = extra_link_args
                      )
 
-for ver in [('tuxedo', tuxedo_ext),('tuxedo_ws', tuxedo_ext_ws)]:
+for ver in [('tuxedo', tuxedo_ext, 'IPC flavour'),('tuxedo_ws', tuxedo_ext_ws, 'Network /WS flavour')]:
     setup(name = ver[0],
-          version = '1.0',
-          description = 'Tuxmodule: A Python client and server library for use with BEA Tuxedo',
+          version = '1.1',
+          description = 'Tuxmodule: A Python client and server library for use with the Tuxedo transaction monitor, %s' 
+                           %(ver[2],),
           author = 'Ralf Henschkowski',
           author_email = 'ralf.henschkowski@gmail.com',
           url = 'http://code.google.com/p/tuxmodule',
