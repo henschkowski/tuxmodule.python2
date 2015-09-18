@@ -35,10 +35,10 @@ status, _ = commands.getstatusoutput("nm %s | grep tpappthr" % (os.path.join(tux
 tux10 = not status
 if tuxversion == 0 and tux10 == True:
     print "*** Building for Tuxedo Version > 10  ... ***"
-    tuxversion = 8
+    tuxversion = 10
 elif tuxversion == 0 and tux8 == True:
     print "*** Building for Tuxedo Version > 8  ... ***"
-    tuxversion = 10
+    tuxversion = 8
 else:
     print "*** Building for Tuxedo 6.x ... ***"
     tuxversion = 6
