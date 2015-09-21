@@ -35,10 +35,10 @@ status, _ = commands.getstatusoutput("nm %s | grep tpappthr" % (os.path.join(tux
 tux10 = not status
 if tuxversion == 0 and tux10 == True:
     print "*** Building for Tuxedo Version > 10  ... ***"
-    tuxversion = 8
+    tuxversion = 10
 elif tuxversion == 0 and tux8 == True:
     print "*** Building for Tuxedo Version > 8  ... ***"
-    tuxversion = 10
+    tuxversion = 8
 else:
     print "*** Building for Tuxedo 6.x ... ***"
     tuxversion = 6
@@ -59,19 +59,21 @@ elif os.name == 'posix':
     include_dirs = [my_inc, tuxedo_dir + '/include',  '/usr/include']
     library_dirs = [tuxedo_dir + '/lib', '/usr/lib']
 
-    if tuxversion < 7:
-	libraries = ['tux', 'tmib', 'qm', 'buft', 'tux2', 'fml', 'fml32', 'gp', '/usr/lib/libcrypt.a']
-	libraries_ws = ['wsc', 'buft', 'wsc', 'nws', 'nwi', 'nws', 'fml', 'fml32', 'gp', 'nsl', 'socket', '/usr/lib/libcrypt.a']
+    if sys.platform.startswith('hp-ux'):
+        libcrypt = ['Csup', 'unwind']
     else:
-	libraries = ['tux', 'tmib', 'buft', 'fml', 'fml32', '/usr/lib/libcrypt.a']
-	libraries_ws = ['wsc', 'tmib', 'buft', 'fml', 'fml32', 'gpnet', 'engine', 'dl', 'pthread', '/usr/lib/libcrypt.a']
-	
+        libcrypt = ['/usr/lib/libcrypt.a']
 
+    if tuxversion < 7:
+        libraries = ['tux', 'tmib', 'qm', 'buft', 'tux2', 'fml', 'fml32', 'gp'] + libcrypt
+        libraries_ws = ['wsc', 'buft', 'wsc', 'nws', 'nwi', 'nws', 'fml', 'fml32', 'gp', 'nsl', 'socket'] + libcrypt
+    else:
+        libraries = ['tux', 'tmib', 'buft', 'fml', 'fml32'] + libcrypt
+        libraries_ws = ['wsc', 'tmib', 'buft', 'fml', 'fml32', 'gpnet', 'engine', 'dl', 'pthread'] + libcrypt
 
 # For debug purposes only, set if you experience core dumps
 #extra_compile_args.append("-DDEBUG")
 #extra_compile_args.append("-g")
-
 
 # build the atmi and atmi/WS modules
 tuxedo_ext = Extension(name = 'tuxedo.atmi',
